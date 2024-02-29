@@ -34,6 +34,8 @@ namespace _3.hét
                 }
             }
 
+            Random rnd = new Random();
+
             for (int i = 0; i < 100; i++)
             {
                 Button gomb = new();
@@ -41,8 +43,6 @@ namespace _3.hét
 
                 gomb.Width = 40;
                 gomb.Height = 40;
-
-                Random rnd = new Random();
                 
                 gomb.Top = rnd.Next(0, ClientRectangle.Height);
                 gomb.Left = rnd.Next(0, ClientRectangle.Width);
