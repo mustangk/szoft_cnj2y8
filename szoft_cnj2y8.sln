@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HajósTeszt", "HajósTeszt\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kígyós", "Kígyós\Kígyós.csproj", "{8A16863B-D9A1-459B-BC02-9523836ABCA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adatkötés", "Adatkötés\Adatkötés.csproj", "{EF5AD3E8-7ECF-4FFA-A069-E385AEC7B99A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Adatkötés", "Adatkötés\Adatkötés.csproj", "{EF5AD3E8-7ECF-4FFA-A069-E385AEC7B99A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Csillagtérkép", "Csillagtérkép\Csillagtérkép.csproj", "{E39CB6EB-F3FF-4020-9945-4D2B792E7E0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{EF5AD3E8-7ECF-4FFA-A069-E385AEC7B99A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF5AD3E8-7ECF-4FFA-A069-E385AEC7B99A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF5AD3E8-7ECF-4FFA-A069-E385AEC7B99A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E39CB6EB-F3FF-4020-9945-4D2B792E7E0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E39CB6EB-F3FF-4020-9945-4D2B792E7E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E39CB6EB-F3FF-4020-9945-4D2B792E7E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E39CB6EB-F3FF-4020-9945-4D2B792E7E0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
