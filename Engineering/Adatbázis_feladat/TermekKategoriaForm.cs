@@ -1,6 +1,7 @@
 ﻿using Adatbázis_feladat.Data;
 using Adatbázis_feladat.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -55,45 +56,6 @@ namespace Adatbázis_feladat
             return node;
         }
 
-        public void SaveExpandedRows(System.Windows.Forms.TreeView treeView)
-        {
-            _expandedPaths = GetExpandedNodePaths(treeView.Nodes);
-        }
-
-        private List<string> GetExpandedNodePaths(TreeNodeCollection nodes, string parentPath = "")
-        {
-            var paths = new List<string>();
-            foreach (TreeNode node in nodes)
-            {
-                string currentPath = string.IsNullOrEmpty(parentPath) ? node.Name : $"{parentPath}/{node.Name}";
-                if (node.IsExpanded)
-                {
-                    paths.Add(currentPath);
-                }
-                paths.AddRange(GetExpandedNodePaths(node.Nodes, currentPath));
-            }
-            return paths;
-        }
-
-        public void LoadExpandedRows(System.Windows.Forms.TreeView treeView)
-        {
-            ExpandNodes(treeView.Nodes, _expandedPaths);
-        }
-
-        private void ExpandNodes(TreeNodeCollection nodes, List<string> expandedPaths, string parentPath = "")
-        {
-            foreach (TreeNode node in nodes)
-            {
-                string currentPath = string.IsNullOrEmpty(parentPath) ? node.Name : $"{parentPath}/{node.Name}";
-
-                if (expandedPaths.Contains(currentPath))
-                {
-                    node.Expand();
-                }
-
-                ExpandNodes(node.Nodes, expandedPaths, currentPath);
-            }
-        }
 
         private void treeViewKategoriak_AfterSelect(object sender, TreeViewEventArgs e)
         {
@@ -101,6 +63,7 @@ namespace Adatbázis_feladat
             {
                 textBoxNev.Text = selectedKategoria.Nev;
                 textBoxLeiras.Text = selectedKategoria.Leiras;
+                treeViewKategoriak.ContextMenuStrip = contextMenuStripKategoria;
             }
         }
 
@@ -117,15 +80,137 @@ namespace Adatbázis_feladat
             try
             {
                 context.SaveChanges();
-                SaveExpandedRows(treeViewKategoriak);
                 LoadKategoriak();
-                LoadExpandedRows(treeViewKategoriak);
+                textBoxNev.Clear();
+                textBoxLeiras.Clear();
                 MessageBox.Show("A változtatások sikeresen mentve!", "Siker", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Hiba történt a mentés során: {ex.Message}", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void átnevezésToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeViewKategoriak.SelectedNode != null)
+            {
+                treeViewKategoriak.SelectedNode.BeginEdit();
+            }
+        }
+
+        private void treeViewKategoriak_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
+        {
+            if (e.Label == null && string.IsNullOrEmpty(e.Label))
+            {
+                MessageBox.Show("Válassz ki egy elemet!");
+                return;
+            }
+
+            TermekKategoria átvevezettKategoria = (TermekKategoria)e.Node.Tag;
+            átvevezettKategoria.Nev = e.Label;
+            context.SaveChanges();
+        }
+
+        private void újFőkategóriaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            TermekKategoria újtk = new();
+            újtk.Nev = "Add meg a ketegória nevét!";
+            újtk.SzuloKategoriaId = null;
+            context.TermekKategoria.Add(újtk);
+            context.SaveChanges();
+
+            TreeNode újtn = new(újtk.Nev);
+            újtn.Tag = újtk;
+            treeViewKategoriak.Nodes.Add(újtn);
+            treeViewKategoriak.SelectedNode = újtn;
+            újtn.BeginEdit();
+        }
+
+        private void újAlkategóriaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeViewKategoriak.SelectedNode == null)
+            {
+                MessageBox.Show("Válassz ki egy elemet!");
+                return;
+            }
+
+            TermekKategoria kategoria = new TermekKategoria();
+            kategoria.Nev = "Add meg a ketegória nevét!";
+            kategoria.SzuloKategoriaId = ((TermekKategoria)treeViewKategoriak.SelectedNode.Tag).SzuloKategoriaId;
+            context.TermekKategoria.Add(kategoria);
+            context.SaveChanges();
+
+            TreeNode újtn = new(kategoria.Nev);
+            újtn.Tag = kategoria;
+            treeViewKategoriak.SelectedNode.Nodes.Add(újtn);
+            treeViewKategoriak.SelectedNode = újtn;
+            újtn.BeginEdit();
+        }
+
+        private void frissítésToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadKategoriak();
+        }
+
+        private void törlésToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (treeViewKategoriak.SelectedNode == null)
+            {
+                MessageBox.Show("Válassz ki egy elemet!");
+                return;
+            }
+            
+            foreach (var item in context.Termek)
+                {
+                if (item.Kategoria == treeViewKategoriak.SelectedNode.Tag)
+                {
+                    MessageBox.Show("Már vannak ebben a kategóriában termékek!");
+                    return;
+                }
+                }
+
+            if (treeViewKategoriak.SelectedNode.Nodes.Count == 0)
+            {
+                var confirmResult = MessageBox.Show("Biztosan ki akarod törölni ezt az elemet?",
+                                     "Törlés",
+                                     MessageBoxButtons.YesNo);
+
+                if (confirmResult == DialogResult.Yes)
+                {
+                    TermekKategoria kategoria = (TermekKategoria)treeViewKategoriak.SelectedNode.Tag;
+                    context.TermekKategoria.Remove(kategoria);
+                    context.SaveChanges();
+
+                    treeViewKategoriak.Nodes.Remove(treeViewKategoriak.SelectedNode);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Nem törölhető kategória!");
+            }
+        }
+
+        private void treeViewKategoriak_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Step 1: Check if the right mouse button is clicked
+            if (e.Button == MouseButtons.Right)
+            {
+                // Step 2: Get the node at the mouse position
+                TreeNode clickedNode = treeViewKategoriak.GetNodeAt(e.X, e.Y);
+
+                if (clickedNode != null)
+                {
+                    // Step 3: Select the node under the cursor
+                    treeViewKategoriak.SelectedNode = clickedNode;
+
+                    // Step 4: Show the context menu at the mouse position
+                    contextMenuStripKategoria.Show(treeViewKategoriak, e.Location);
+                }
             }
         }
     }
