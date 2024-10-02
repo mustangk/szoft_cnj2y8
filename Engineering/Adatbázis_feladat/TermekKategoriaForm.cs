@@ -250,27 +250,17 @@ namespace Adatbázis_feladat
 
         private void AddNodeToXml(TreeNode node, XElement parentElement)
         {
-            try
+            var id = (from k in context.TermekKategoria where k.Nev == node.Text select k.KategoriaId).FirstOrDefault().ToString();
+
+            XElement nodeElement = new XElement("Kategoria",
+                new XAttribute("KategoriaId", id),
+                new XAttribute("Nev", node.Text));
+
+            parentElement.Add(nodeElement);
+
+            foreach (TreeNode childNode in node.Nodes)
             {
-                var id = (from k in context.TermekKategoria where k.Nev == node.Text select k.KategoriaId).FirstOrDefault();
-                string strid;
-                strid = id.ToString();
-
-                XElement nodeElement = new XElement("Kategoria",
-                    new XAttribute("KategoriaID", strid),
-                    new XAttribute("Nev", node.Text));
-
-                parentElement.Add(nodeElement);
-
-                foreach (TreeNode childNode in node.Nodes)
-                {
-                    AddNodeToXml(childNode, nodeElement);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                throw;
+                AddNodeToXml(childNode, nodeElement);
             }
         }
     }
