@@ -11,6 +11,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Adatbázis_feladat
@@ -160,15 +162,15 @@ namespace Adatbázis_feladat
                 MessageBox.Show("Válassz ki egy elemet!");
                 return;
             }
-            
+
             foreach (var item in context.Termek)
-                {
+            {
                 if (item.Kategoria == treeViewKategoriak.SelectedNode.Tag)
                 {
                     MessageBox.Show("Már vannak ebben a kategóriában termékek!");
                     return;
                 }
-                }
+            }
 
             if (treeViewKategoriak.SelectedNode.Nodes.Count == 0)
             {
@@ -211,6 +213,64 @@ namespace Adatbázis_feladat
                     // Step 4: Show the context menu at the mouse position
                     contextMenuStripKategoria.Show(treeViewKategoriak, e.Location);
                 }
+            }
+        }
+
+        private void xMLFájlMentéseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportTreeViewToXml(treeViewKategoriak);
+        }
+
+        public void ExportTreeViewToXml(System.Windows.Forms.TreeView treeView)
+        {
+            XElement rootElement = new XElement("Termekkategoriak");
+
+            foreach (TreeNode node in treeView.Nodes)
+            {
+                AddNodeToXml(node, rootElement);
+            }
+
+            // Megnyitjuk a SaveFileDialog-ot a fájl mentéséhez
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "XML fájlok (*.xml)|*.xml|Minden fájl (*.*)|*.*";
+                saveFileDialog.Title = "Exportálás XML fájlba";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // XML fájl mentése
+                    XDocument xDocument = new XDocument(rootElement);
+                    XDeclaration xdecl = new XDeclaration("1.0", "utf-8", "yes");
+                    xDocument.Declaration = xdecl;
+                    xDocument.Save(saveFileDialog.FileName);
+                    MessageBox.Show("Exportálás sikeres!");
+                }
+            }
+        }
+
+        private void AddNodeToXml(TreeNode node, XElement parentElement)
+        {
+            try
+            {
+                var id = (from k in context.TermekKategoria where k.Nev == node.Text select k.KategoriaId).FirstOrDefault();
+                string strid;
+                strid = id.ToString();
+
+                XElement nodeElement = new XElement("Kategoria",
+                    new XAttribute("KategoriaID", strid),
+                    new XAttribute("Nev", node.Text));
+
+                parentElement.Add(nodeElement);
+
+                foreach (TreeNode childNode in node.Nodes)
+                {
+                    AddNodeToXml(childNode, nodeElement);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                throw;
             }
         }
     }

@@ -33,9 +33,6 @@
             textBoxNev = new TextBox();
             textBoxLeiras = new TextBox();
             buttonMentes = new Button();
-            buttonUjTestver = new Button();
-            buttonUjGyermek = new Button();
-            buttonTorles = new Button();
             label1 = new Label();
             label2 = new Label();
             contextMenuStripKategoria = new ContextMenuStrip(components);
@@ -44,6 +41,7 @@
             újAlkategóriaToolStripMenuItem = new ToolStripMenuItem();
             törlésToolStripMenuItem = new ToolStripMenuItem();
             frissítésToolStripMenuItem = new ToolStripMenuItem();
+            xMLFájlMentéseToolStripMenuItem = new ToolStripMenuItem();
             contextMenuStripKategoria.SuspendLayout();
             SuspendLayout();
             // 
@@ -75,40 +73,13 @@
             // 
             // buttonMentes
             // 
-            buttonMentes.Location = new Point(599, 327);
+            buttonMentes.Location = new Point(692, 327);
             buttonMentes.Name = "buttonMentes";
             buttonMentes.Size = new Size(75, 23);
             buttonMentes.TabIndex = 3;
             buttonMentes.Text = "Mentés";
             buttonMentes.UseVisualStyleBackColor = true;
             buttonMentes.Click += buttonMentes_Click;
-            // 
-            // buttonUjTestver
-            // 
-            buttonUjTestver.Location = new Point(401, 327);
-            buttonUjTestver.Name = "buttonUjTestver";
-            buttonUjTestver.Size = new Size(75, 23);
-            buttonUjTestver.TabIndex = 4;
-            buttonUjTestver.Text = "Új testvér";
-            buttonUjTestver.UseVisualStyleBackColor = true;
-            // 
-            // buttonUjGyermek
-            // 
-            buttonUjGyermek.Location = new Point(502, 327);
-            buttonUjGyermek.Name = "buttonUjGyermek";
-            buttonUjGyermek.Size = new Size(75, 23);
-            buttonUjGyermek.TabIndex = 5;
-            buttonUjGyermek.Text = "Új gyermek";
-            buttonUjGyermek.UseVisualStyleBackColor = true;
-            // 
-            // buttonTorles
-            // 
-            buttonTorles.Location = new Point(692, 327);
-            buttonTorles.Name = "buttonTorles";
-            buttonTorles.Size = new Size(75, 23);
-            buttonTorles.TabIndex = 6;
-            buttonTorles.Text = "Törlés";
-            buttonTorles.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -130,9 +101,9 @@
             // 
             // contextMenuStripKategoria
             // 
-            contextMenuStripKategoria.Items.AddRange(new ToolStripItem[] { átnevezésToolStripMenuItem, újFőkategóriaToolStripMenuItem, újAlkategóriaToolStripMenuItem, törlésToolStripMenuItem, frissítésToolStripMenuItem });
+            contextMenuStripKategoria.Items.AddRange(new ToolStripItem[] { átnevezésToolStripMenuItem, újFőkategóriaToolStripMenuItem, újAlkategóriaToolStripMenuItem, törlésToolStripMenuItem, frissítésToolStripMenuItem, xMLFájlMentéseToolStripMenuItem });
             contextMenuStripKategoria.Name = "contextMenuStrip1";
-            contextMenuStripKategoria.Size = new Size(149, 114);
+            contextMenuStripKategoria.Size = new Size(181, 158);
             // 
             // átnevezésToolStripMenuItem
             // 
@@ -169,6 +140,13 @@
             frissítésToolStripMenuItem.Text = "Frissítés";
             frissítésToolStripMenuItem.Click += frissítésToolStripMenuItem_Click;
             // 
+            // xMLFájlMentéseToolStripMenuItem
+            // 
+            xMLFájlMentéseToolStripMenuItem.Name = "xMLFájlMentéseToolStripMenuItem";
+            xMLFájlMentéseToolStripMenuItem.Size = new Size(180, 22);
+            xMLFájlMentéseToolStripMenuItem.Text = "XML fájl mentése";
+            xMLFájlMentéseToolStripMenuItem.Click += xMLFájlMentéseToolStripMenuItem_Click;
+            // 
             // TermekKategoriaForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -176,9 +154,6 @@
             ClientSize = new Size(800, 450);
             Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(buttonTorles);
-            Controls.Add(buttonUjGyermek);
-            Controls.Add(buttonUjTestver);
             Controls.Add(buttonMentes);
             Controls.Add(textBoxLeiras);
             Controls.Add(textBoxNev);
@@ -196,9 +171,6 @@
         private TextBox textBoxNev;
         private TextBox textBoxLeiras;
         private Button buttonMentes;
-        private Button buttonUjTestver;
-        private Button buttonUjGyermek;
-        private Button buttonTorles;
         private Label label1;
         private Label label2;
         private ContextMenuStrip contextMenuStripKategoria;
@@ -207,5 +179,6 @@
         private ToolStripMenuItem újAlkategóriaToolStripMenuItem;
         private ToolStripMenuItem törlésToolStripMenuItem;
         private ToolStripMenuItem frissítésToolStripMenuItem;
+        private ToolStripMenuItem xMLFájlMentéseToolStripMenuItem;
     }
 }
